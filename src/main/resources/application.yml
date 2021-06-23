@@ -16,10 +16,20 @@ spring:
 #  mustache:
 #    suffix: .html
 #    expose-session-attributes: true  # session처리 및 ui에서 머스테치 사용하기 위한 설정
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 591973622327-g7jugjudrpidfpeg15ls6bucj9ujfuf2.apps.googleusercontent.com
+            client-secret: bWcwngZZEyC-zsm1WCZCrFqx
+            scope:  # email과 profile만 받아 오겠다.
+              - email
+              - profile
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/security?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/security1?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: user02
     password: user02
 
