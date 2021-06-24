@@ -1,6 +1,8 @@
 package com.kye.security1.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import java.sql.Timestamp;
 
 // ORM - Object Relation Mapping
 @Data
+@NoArgsConstructor
 @Entity
 public class User {
 
@@ -29,4 +32,17 @@ public class User {
     @CreationTimestamp
     private Timestamp createDate;
 
+
+    // 빌더 구성을 위한 생성자
+    @Builder
+    public User(String username, String password, String email, String role, String provider,
+                String providerId, Timestamp createDate) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.createDate = createDate;
+    }
 }

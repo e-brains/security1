@@ -1,4 +1,4 @@
-package com.kye.security1;
+package com.kye.security1.auth;
 
 import com.kye.security1.auth.PrincipalDetails;
 import com.kye.security1.model.User;
@@ -29,12 +29,13 @@ public class PrincipalDetailsService implements UserDetailsService {
         User userEntity = userRepository.findByUsername(username);
 
         // user 가 있으면
-        // principalDetails 를 생성해서 리턴하면 Authentication에 들어감 (시큐리티 세션 생성)
+        // principalDetails 를 생성해서 리턴하면 Authentication 에 들어감 (시큐리티 세션 생성)
         // 시큐리티 세션 > Authentication > UserDetails (PrincipalDetails)
         if (userEntity != null){
             return new PrincipalDetails(userEntity);
         }
 
+        // 메서드 종료 시 @AuthenticationPrincipal 어노테이션이 만들어진다.
         return null;
     }
 }
