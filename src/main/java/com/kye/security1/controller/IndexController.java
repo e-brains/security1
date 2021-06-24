@@ -35,7 +35,7 @@ public class IndexController {
     // 따로 분기할 필요가 없다.
     @GetMapping("/user")
     public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails){
-        //System.out.println("principalDetails ==== "+principalDetails.getUser());
+        System.out.println("indexController ==> principalDetails ==> "+principalDetails.getUser());
         return "user";
     }
 

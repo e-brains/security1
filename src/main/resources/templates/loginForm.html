@@ -12,7 +12,13 @@
     <input type="password" name="password" placeholder="Password">
     <button>로그인</button>
 </form>
-<a href="/oauth2/authorization/google">구글 로그인</a>
-<a href="/joinForm">회원가입 화면으로 이동합니다.</a>
+<!--'/oauth2/authorization'는 provider 에 설정된 요청주소로 바뀐다. 구글과 페이스북은 기본 provider라서
+별도의 설정이 없어도 되지만 네이버난 카카오는 yml파일에 상세히 설정해야 한다.-->
+<a href="/oauth2/authorization/google">구글 로그인</a>&nbsp;&nbsp;
+<a href="/oauth2/authorization/facebook">페이스북 로그인</a>&nbsp;&nbsp;
+<!--yml에서 authorization-uri: 에 설정한 네이버 로그인 창 요청 주소를 호출하게 된다.-->
+<a href="/oauth2/authorization/naver">네이버 로그인</a>
+
+&nbsp;&nbsp;&nbsp;<a href="/joinForm">회원가입 화면으로 이동합니다.</a>
 </body>
 </html>

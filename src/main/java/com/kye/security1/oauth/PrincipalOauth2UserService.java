@@ -12,6 +12,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
@@ -36,13 +38,44 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         // 내부적으로 우리쪽에 회원 가입을 시키기 위해 User 정보를 가공한다.
         OAuth2User oAuth2User = super.loadUser(userRequest);
-        //System.out.println("PrincipalOauth2UserService : oAuth2User.getAttributes() ====> " + oAuth2User.getAttributes());
+        System.out.println("PrincipalOauth2UserService : oAuth2User.getAttributes() ====> " + oAuth2User.getAttributes());
 
-        String provider = userRequest.getClientRegistration().getClientId();  // google
+        /*
+        String provider = userRequest.getClientRegistration().getRegistrationId();  // google
         String providerId = oAuth2User.getAttribute("sub");
         String username = provider+"_"+providerId;  // google_12344........  중복이 없다.
         String password = bCryptPasswordEncoder.encode(("학습관리시스템")); // 큰 의미는 없지만 강제 생성을 위해 작성
         String email = oAuth2User.getAttribute("email");
+        String role = "ROLE_USER";
+        */
+
+        // 각 provider별로 분기한다.
+        OAuth2UserInfo oAuth2UserInfo = null;
+
+        if (userRequest.getClientRegistration().getRegistrationId().equals("google")){
+
+            System.out.println("구글 로그인 요청 getRegistrationId() =================== " + userRequest.getClientRegistration().getRegistrationId());
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+
+        }else if (userRequest.getClientRegistration().getRegistrationId().equals("facebook")){
+
+            System.out.println("페이스북 로그인 요청 ===================");
+            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+
+        }else if (userRequest.getClientRegistration().getRegistrationId().equals("naver")){
+
+            System.out.println("네이버 로그인 요청 ===================");
+            oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));
+
+        }else {
+            System.out.println("구글과 페이스북, 네이버만 지원함 !!!!");
+        }
+
+        String provider = oAuth2UserInfo.getProvider();
+        String providerId = oAuth2UserInfo.getProviderId();
+        String username = provider+"_"+providerId;  // google_12344........  중복이 없다.
+        String password = bCryptPasswordEncoder.encode(("학습관리시스템")); // 큰 의미는 없지만 강제 생성을 위해 작성
+        String email = oAuth2UserInfo.getEmail();
         String role = "ROLE_USER";
 
         // 기존에 이미 가입되어 있는지 여부 확인 (구글 로그인이 최초인지 확인하기 위해서)
@@ -58,7 +91,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     .build();
             userRepository.save(userEntity);
         }else {
-            System.out.println("이미 과거에 구글 로그인을 하면서 자동 회원가입이 되어 있다.");
+            System.out.println("이미 과거에 로그인을 하면서 자동 회원가입이 되어 있습니다.");
         }
 
         // PrincipalDetails는 UserDetails와 OAuth2User를 implementation하고 있기 때문에 사용 가능
